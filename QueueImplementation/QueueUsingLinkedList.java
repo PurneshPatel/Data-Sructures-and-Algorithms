@@ -1,77 +1,163 @@
 package QueueImplementation;
 
-public class QueueUsingLinkedList {
+import java.util.*;
 
-    private Node front, rear;
-    private int currentSize; // size
- 
-    //Node data structure
-    private class Node
-    {
-        int data;
-        Node next;
+class Node {
+    protected int data;
+    protected Node link;
+
+    public Node() {
+        link = null;
+        data = 0;
     }
- 
-    //constructor
-    public QueueUsingLinkedList()
-    {
-        front = null;
-        rear = null;
-        currentSize = 0;
+
+    public Node(int d, Node n) {
+        data = d;
+        link = n;
     }
- 
-    public boolean isEmpty()
-    {
-        return (currentSize == 0);
+
+    public void setLink(Node n) {
+        link = n;
     }
- 
-    //Remove item from the beginning of the list to simulate Queue
-    public int dequeue()
-    {
-        int data = front.data;
-        front = front.next;
-        if (isEmpty())
-        {
-            rear = null;
-        }
-        currentSize--;
-        System.out.println(data+ " removed from the queue");
+
+    // Function to set data to current Node
+    public void setData(int d) {
+        data = d;
+    }
+
+    // Function to get link to next node
+    public Node getLink() {
+        return link;
+    }
+
+    // Function to get data from current Node
+    public int getData() {
         return data;
     }
- 
-    //Add data to the end of the list to simulate Queue
-    public void enqueue(int data)
-    {
-        Node oldRear = rear;
-        rear = new Node();
-        rear.data = data;
-        rear.next = null;
-        if (isEmpty())
-        {
-            front = rear;
-        }
-        else
-        {
-            oldRear.next = rear;
-        }
-        currentSize++;
-        System.out.println(data+ " added to the queue");
+}
+
+class linkedQueue {
+    protected Node front, rear;
+    public int size;
+
+    public linkedQueue() {
+        front = null;
+        rear = null;
+        size = 0;
     }
-    public static void main(String a[]){
- 
-        QueueUsingLinkedList queueUsingLinkedList = new QueueUsingLinkedList();
-        queueUsingLinkedList.enqueue(60);
-        queueUsingLinkedList.dequeue();
-        queueUsingLinkedList.enqueue(10);
-        queueUsingLinkedList.enqueue(20);
-        queueUsingLinkedList.enqueue(40);
-        queueUsingLinkedList.dequeue();
-        queueUsingLinkedList.enqueue(70);
-        queueUsingLinkedList.dequeue();
-        queueUsingLinkedList.enqueue(80);
-        queueUsingLinkedList.enqueue(100);
-        queueUsingLinkedList.dequeue();
-        queueUsingLinkedList.enqueue(150);
-        queueUsingLinkedList.enqueue(50);
+
+    // Function to check if queue is empty
+    public boolean isEmpty() {
+        return front == null;
+    }
+
+    // Function to get the size of the queue
+    public int getSize() {
+        return size;
+    }
+
+    // Function to insert an element to the queue
+    public void insert(int data) {
+        Node nptr = new Node(data, null);
+        if (rear == null) {
+            front = nptr;
+            rear = nptr;
+        } else {
+            rear.setLink(nptr);
+            rear = rear.getLink();
+        }
+        size++;
+    }
+
+    // Function to remove front element from the queue
+    public int remove() {
+        if (isEmpty())
+            throw new NoSuchElementException("Underflow Exception");
+        Node ptr = front;
+        front = ptr.getLink();
+        if (front == null)
+            rear = null;
+        size--;
+        return ptr.getData();
+    }
+
+    // Function to check the front element of the queue
+    public int peek() {
+        if (isEmpty())
+            throw new NoSuchElementException("Underflow Exception");
+        return front.getData();
+    }
+
+    // Function to display the status of the queue
+    public void display() {
+        System.out.print("\nQueue = ");
+        if (size == 0) {
+            System.out.print("Empty\n");
+            return;
+        }
+        Node ptr = front;
+        while (ptr != rear.getLink()) {
+            System.out.print(ptr.getData() + " ");
+            ptr = ptr.getLink();
+        }
+        System.out.println();
+    }
+}
+
+class LinkedQueueImplement {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+
+        linkedQueue lq = new linkedQueue();
+
+        System.out.println("Linked Queue Test\n");
+        char ch;
+        System.out.println("\nQueue Operations");
+        System.out.println("1. Insert");
+        System.out.println("2. Remove");
+        System.out.println("3. Peek");
+        System.out.println("4. Check empty");
+        System.out.println("5. Size");
+        do {
+            System.out.print("Enter choice  : ");
+            int choice = scan.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter integer element to insert : ");
+                    lq.insert(scan.nextInt());
+                    break;
+                case 2:
+                    try {
+                        System.out.println("Removed Element = " + lq.remove());
+                    } catch (Exception e) {
+                        System.out.println("Error : " + e.getMessage());
+                    }
+                    break;
+                case 3:
+                    try {
+                        System.out.println("Peek Element = " + lq.peek());
+                    } catch (Exception e) {
+                        System.out.println("Error : " + e.getMessage());
+                    }
+                    break;
+                case 4:
+                    System.out.println("Empty status = " + lq.isEmpty());
+                    break;
+
+                case 5:
+                    System.out.println("Size = " + lq.getSize());
+                    break;
+
+                default:
+                    System.out.println("Wrong Entry \n ");
+                    break;
+            }
+            // display queue
+            lq.display();
+
+            System.out.print("\nDo you want to continue (Type y or n) : ");
+            ch = scan.next().charAt(0);
+        } while (ch == 'Y' || ch == 'y');
+        scan.close();
     }
 }
